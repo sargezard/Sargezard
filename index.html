@@ -69,5 +69,105 @@
             </div>
 
             <!-- Ownership status tag -->
-            <div id
-                
+            <div id="status-badge" class="w-full py-2 rounded-xl font-bold text-center text-xs shadow-md bg-slate-900 text-slate-500 border border-slate-700">
+                Not Yet Collected
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="flex gap-2 pt-2">
+                <button onclick="changeCard(-1)" class="flex-1 bg-slate-700 hover:bg-slate-600 py-3 rounded-xl text-xs font-bold text-slate-200 transition-all">Previous</button>
+                <button onclick="changeCard(1)" class="flex-1 bg-slate-700 hover:bg-slate-600 py-3 rounded-xl text-xs font-bold text-slate-200 transition-all">Next</button>
+            </div>
+        </div>
+
+        <!-- Export / Import Buttons -->
+        <div class="flex gap-2 mt-4 pt-4 border-t border-slate-700">
+            <button onclick="exportData()" class="flex-1 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold py-2.5 rounded-xl shadow-lg text-xs transition-all">
+                📤 Export Backup
+            </button>
+            <button onclick="document.getElementById('import-file').click()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold py-2.5 rounded-xl shadow-lg text-xs transition-all border border-slate-600">
+                📥 Load Backup
+            </button>
+            <input type="file" id="import-file" onchange="importData(event)" accept=".sargezard,.json" class="hidden" />
+        </div>
+    </div>
+
+    <script>
+        const cards = [
+            { id: 1, name: "Bulbasaur", type: "Grass", illustrator: "Yoriyuki Ikegami", hp: "70", stage: "Basic", retreat: "1", attackName: "Vine Whip", attackDmg: "30" },
+            { id: 2, name: "Ivysaur", type: "Grass", illustrator: "kawayoo", hp: "100", stage: "Stage 1", retreat: "2", attackName: "Razor Leaf", attackDmg: "60" },
+            { id: 3, name: "Venusaur ex", type: "Grass", illustrator: "5ban Graphics", hp: "330", stage: "Stage 2 ex", retreat: "3", attackName: "Dangerous Bloom", attackDmg: "150" },
+            { id: 4, name: "Charmander", type: "Fire", illustrator: "Mitsuhiro Arita", hp: "60", stage: "Basic", retreat: "1", attackName: "Live Coal", attackDmg: "20" },
+            { id: 5, name: "Charmeleon", type: "Fire", illustrator: "Kagemaru Himeno", hp: "100", stage: "Stage 1", retreat: "2", attackName: "Slash", attackDmg: "50" },
+            { id: 6, name: "Charizard ex", type: "Fire", illustrator: "inose yukie", hp: "330", stage: "Stage 2 ex", retreat: "2", attackName: "Exploding Vortex", attackDmg: "180+" },
+            { id: 7, name: "Squirtle", type: "Water", illustrator: "Mitsuhiro Arita", hp: "60", stage: "Basic", retreat: "1", attackName: "Find a Friend", attackDmg: "-" },
+            { id: 8, name: "Wartortle", type: "Water", illustrator: "Kagemaru Himeno", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Wave Splash", attackDmg: "40" },
+            { id: 9, name: "Blastoise ex", type: "Water", illustrator: "planeta Mochizuki", hp: "320", stage: "Stage 2 ex", retreat: "3", attackName: "Twin Pumps", attackDmg: "130x" },
+            { id: 10, name: "Caterpie", type: "Grass", illustrator: "Miki Tanaka", hp: "50", stage: "Basic", retreat: "1", attackName: "Find a Friend", attackDmg: "-" },
+            { id: 11, name: "Metapod", type: "Grass", illustrator: "Kouki Saitou", hp: "80", stage: "Stage 1", retreat: "2", attackName: "Harden", attackDmg: "-" },
+            { id: 12, name: "Butterfree", type: "Grass", illustrator: "Scav", hp: "140", stage: "Stage 2", retreat: "1", attackName: "Tricolor Pollen", attackDmg: "90" },
+            { id: 13, name: "Weedle", type: "Grass", illustrator: "Krgc", hp: "50", stage: "Basic", retreat: "1", attackName: "Ram", attackDmg: "10" },
+            { id: 14, name: "Kakuna", type: "Grass", illustrator: "Sekio", hp: "80", stage: "Stage 1", retreat: "2", attackName: "Stiff Stance", attackDmg: "-" },
+            { id: 15, name: "Beedrill", type: "Grass", illustrator: "Shin Nagasawa", hp: "130", stage: "Stage 2", retreat: "1", attackName: "Swarm Sting", attackDmg: "110" },
+            { id: 16, name: "Pidgey", type: "Colorless", illustrator: "Teeziro", hp: "60", stage: "Basic", retreat: "1", attackName: "Gust", attackDmg: "20" },
+            { id: 17, name: "Pidgeotto", type: "Colorless", illustrator: "Anesaki Dynamic", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Flap", attackDmg: "40" },
+            { id: 18, name: "Pidgeot ex", type: "Colorless", illustrator: "PLANETA CG Works", hp: "280", stage: "Stage 2 ex", retreat: "0", attackName: "Blustery Wind", attackDmg: "120" },
+            { id: 19, name: "Rattata", type: "Colorless", illustrator: "Kyoko Umemoto", hp: "50", stage: "Basic", retreat: "1", attackName: "Gnaw", attackDmg: "20" },
+            { id: 20, name: "Raticate", type: "Colorless", illustrator: "Naoyo Kimura", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Super Fang", attackDmg: "50" },
+            { id: 21, name: "Spearow", type: "Colorless", illustrator: "Tomoko Wakai", hp: "60", stage: "Basic", retreat: "1", attackName: "Peck", attackDmg: "20" },
+            { id: 22, name: "Fearow", type: "Colorless", illustrator: "Katsushige Takahashi", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Drill Peck", attackDmg: "70" },
+            { id: 23, name: "Ekans", type: "Darkness", illustrator: "Tika Matsuno", hp: "70", stage: "Basic", retreat: "1", attackName: "Acid", attackDmg: "20" },
+            { id: 24, name: "Arbok ex", type: "Darkness", illustrator: "aky CG Works", hp: "270", stage: "Stage 1 ex", retreat: "2", attackName: "Menacing Fang", attackDmg: "150" },
+            { id: 25, name: "Pikachu", type: "Lightning", illustrator: "Mitsuhiro Arita", hp: "60", stage: "Basic", retreat: "1", attackName: "Electro Ball", attackDmg: "20" },
+            { id: 26, name: "Raichu", type: "Lightning", illustrator: "Naoki Saito", hp: "100", stage: "Stage 1", retreat: "1", attackName: "Thunder Bolt", attackDmg: "180" },
+            { id: 27, name: "Sandshrew", type: "Fighting", illustrator: "Kouki Saitou", hp: "70", stage: "Basic", retreat: "1", attackName: "Scratch", attackDmg: "20" },
+            { id: 28, name: "Sandslash", type: "Fighting", illustrator: "Shinji Kanda", hp: "110", stage: "Stage 1", retreat: "2", attackName: "Slash", attackDmg: "70" },
+            { id: 29, name: "Nidoran ♀", type: "Psychic", illustrator: "Mina Nakai", hp: "60", stage: "Basic", retreat: "1", attackName: "Poison Horn", attackDmg: "10" },
+            { id: 30, name: "Nidorina", type: "Psychic", illustrator: "Kagemaru Himeno", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Sharp Fang", attackDmg: "50" },
+            { id: 31, name: "Nidoqueen", type: "Psychic", illustrator: "match", hp: "170", stage: "Stage 2", retreat: "3", attackName: "Queen Press", attackDmg: "140" },
+            { id: 32, name: "Nidoran ♂", type: "Psychic", illustrator: "Akira Komayama", hp: "60", stage: "Basic", retreat: "1", attackName: "Horn Attack", attackDmg: "20" },
+            { id: 33, name: "Nidorino", type: "Psychic", illustrator: "Naoyo Kimura", hp: "90", stage: "Stage 1", retreat: "2", attackName: "Super Horn", attackDmg: "100" },
+            { id: 34, name: "Nidoking", type: "Psychic", illustrator: "Shinji Kanda", hp: "170", stage: "Stage 2", retreat: "3", attackName: "King Impact", attackDmg: "190" },
+            { id: 35, name: "Clefairy", type: "Psychic", illustrator: "Midori Harada", hp: "60", stage: "Basic", retreat: "1", attackName: "Moon Kick", attackDmg: "40" },
+            { id: 36, name: "Clefable", type: "Psychic", illustrator: "Naoki Saito", hp: "100", stage: "Stage 1", retreat: "1", attackName: "Metronome", attackDmg: "-" },
+            { id: 37, name: "Vulpix", type: "Fire", illustrator: "Teeziro", hp: "60", stage: "Basic", retreat: "1", attackName: "Ember", attackDmg: "30" },
+            { id: 38, name: "Ninetales ex", type: "Fire", illustrator: "kirisAki", hp: "260", stage: "Stage 1 ex", retreat: "1", attackName: "Mirror Flames", attackDmg: "80+" },
+            { id: 39, name: "Jigglypuff", type: "Colorless", illustrator: "Yoriyuki Ikegami", hp: "60", stage: "Basic", retreat: "1", attackName: "Slap", attackDmg: "20" },
+            { id: 40, name: "Wigglytuff ex", type: "Colorless", illustrator: "5ban Graphics", hp: "250", stage: "Stage 1 ex", retreat: "2", attackName: "Friend Tackle", attackDmg: "90+" },
+            { id: 41, name: "Zubat", type: "Darkness", illustrator: "Tomoko Wakai", hp: "50", stage: "Basic", retreat: "1", attackName: "Bite", attackDmg: "20" },
+            { id: 42, name: "Golbat", type: "Darkness", illustrator: "Masakazu Fukuda", hp: "80", stage: "Stage 1", retreat: "1", attackName: "Wing Attack", attackDmg: "50" },
+            { id: 43, name: "Oddish", type: "Grass", illustrator: "sowsow", hp: "60", stage: "Basic", retreat: "1", attackName: "Leaf Step", attackDmg: "20" },
+            { id: 44, name: "Gloom", type: "Grass", illustrator: "Kagemaru Himeno", hp: "90", stage: "Stage 1", retreat: "2", attackName: "Drool", attackDmg: "40" },
+            { id: 45, name: "Vileplume", type: "Grass", illustrator: "Gemi", hp: "150", stage: "Stage 2", retreat: "2", attackName: "Solar Beam", attackDmg: "120" },
+            { id: 46, name: "Paras", type: "Grass", illustrator: "Kyoko Umemoto", hp: "70", stage: "Basic", retreat: "1", attackName: "Scratch", attackDmg: "20" },
+            { id: 47, name: "Parasect", type: "Grass", illustrator: "Anesaki Dynamic", hp: "120", stage: "Stage 1", retreat: "2", attackName: "Spores", attackDmg: "70" },
+            { id: 48, name: "Venonat", type: "Grass", illustrator: "Tika Matsuno", hp: "70", stage: "Basic", retreat: "1", attackName: "Tackle", attackDmg: "20" },
+            { id: 49, name: "Venomoth", type: "Grass", illustrator: "Kouki Saitou", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Perplexing Powder", attackDmg: "60" },
+            { id: 50, name: "Diglett", type: "Fighting", illustrator: "Miki Tanaka", hp: "50", stage: "Basic", retreat: "1", attackName: "Mud Slap", attackDmg: "20" },
+            { id: 51, name: "Dugtrio", type: "Fighting", illustrator: "Dsuke", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Headbutt", attackDmg: "60" },
+            { id: 52, name: "Meowth", type: "Colorless", illustrator: "Kagemaru Himeno", hp: "70", stage: "Basic", retreat: "1", attackName: "Pay Day", attackDmg: "10" },
+            { id: 53, name: "Persian", type: "Colorless", illustrator: "Ryuta Fuse", hp: "100", stage: "Stage 1", retreat: "1", attackName: "Slashing Claw", attackDmg: "70" },
+            { id: 54, name: "Psyduck", type: "Water", illustrator: "Krgc", hp: "70", stage: "Basic", retreat: "1", attackName: "Water Gun", attackDmg: "20" },
+            { id: 55, name: "Golduck", type: "Water", illustrator: "kirisAki", hp: "110", stage: "Stage 1", retreat: "1", attackName: "Aqua Jet", attackDmg: "70" },
+            { id: 56, name: "Mankey", type: "Fighting", illustrator: "Teeziro", hp: "60", stage: "Basic", retreat: "1", attackName: "Low Kick", attackDmg: "20" },
+            { id: 57, name: "Primeape", type: "Fighting", illustrator: "Shinji Kanda", hp: "100", stage: "Stage 1", retreat: "2", attackName: "Rage Strike", attackDmg: "50x" },
+            { id: 58, name: "Growlithe", type: "Fire", illustrator: "Shin Nagasawa", hp: "80", stage: "Basic", retreat: "2", attackName: "Bite", attackDmg: "30" },
+            { id: 59, name: "Arcanine", type: "Fire", illustrator: "so-taro", hp: "130", stage: "Stage 1", retreat: "2", attackName: "Flame Flare", attackDmg: "100" },
+            { id: 60, name: "Poliwag", type: "Water", illustrator: "Midori Harada", hp: "60", stage: "Basic", retreat: "1", attackName: "Bubble", attackDmg: "10" },
+            { id: 61, name: "Poliwhirl", type: "Water", illustrator: "sowsow", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Wave Splash", attackDmg: "40" },
+            { id: 62, name: "Poliwrath", type: "Water", illustrator: "Cona Nitanda", hp: "160", stage: "Stage 2", retreat: "2", attackName: "Dynamic Punch", attackDmg: "100+" },
+            { id: 63, name: "Abra", type: "Psychic", illustrator: "Mina Nakai", hp: "50", stage: "Basic", retreat: "1", attackName: "Teleportation Burst", attackDmg: "10" },
+            { id: 64, name: "Kadabra", type: "Psychic", illustrator: "Shinji Kanda", hp: "80", stage: "Stage 1", retreat: "1", attackName: "Psybeam", attackDmg: "40" },
+            { id: 65, name: "Alakazam ex", type: "Psychic", illustrator: "Ryo Ueda", hp: "310", stage: "Stage 2 ex", retreat: "1", attackName: "Dimensional Hand", attackDmg: "120" },
+            { id: 66, name: "Machop", type: "Fighting", illustrator: "Anesaki Dynamic", hp: "70", stage: "Basic", retreat: "2", attackName: "Mountain Gale", attackDmg: "50" },
+            { id: 67, name: "Machoke", type: "Fighting", illustrator: "Kouki Saitou", hp: "100", stage: "Stage 1", retreat: "2", attackName: "Seismic Toss", attackDmg: "60" },
+            { id: 68, name: "Machamp", type: "Fighting", illustrator: "aky CG Works", hp: "180", stage: "Stage 2", retreat: "3", attackName: "Giga Hammer", attackDmg: "200" },
+            { id: 69, name: "Bellsprout", type: "Grass", illustrator: "Tika Matsuno", hp: "60", stage: "Basic", retreat: "1", attackName: "Vine Whip", attackDmg: "20" },
+            { id: 70, name: "Weepinbell", type: "Grass", illustrator: "Naoyo Kimura", hp: "90", stage: "Stage 1", retreat: "2", attackName: "Spit Poison", attackDmg: "30" },
+            { id: 71, name: "Victreebel", type: "Grass", illustrator: "Scav", hp: "150", stage: "Stage 2", retreat: "2", attackName: "Acid", attackDmg: "120" },
+            { id: 72, name: "Tentacool", type: "Water", illustrator: "Kyoko Umemoto", hp: "60", stage: "Basic", retreat: "1", attackName: "Poison Sting", attackDmg: "10" },
+            { id: 73, name: "Tentacruel", type: "Water", illustrator: "Masakazu Fukuda", hp: "120", stage: "Stage 1", retreat: "2", attackName: "Tentacle Spike", attackDmg: "90" },
+            { id: 74, name: "Geodude", type: "Fighting", illustrator: "Akira Komayama", hp: "70", stage: "Basic", retreat: "1", attackName: "Rock Throw", attackDmg: "20" },
+            { id: 75, name: "Graveler", type: "Fighting", illustrator: "Kagemaru Himeno", hp: "100", stage: "Stage 1", retreat: "3", attackName: "Heavy Roll", attackDmg: "60" },
+            { id: 76, name: "Golem ex", type: "Fighting", illustrator: "Shin Nagasawa", hp: "330", stage: "Stage 2 ex", retreat: "4", attackName: "Dynamic Bomber", attackDmg: "180" },
+            { id: 77, name: "Ponyta", type: "Fire", illustrator: "sowsow", hp: "70", stage: "Basic", retreat: "1", attackName: "Stomp", 
