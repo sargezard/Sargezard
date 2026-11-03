@@ -4,389 +4,121 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SARGEZARD - Scarlet & Violet: 151 Tracker</title>
-    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen">
-    <div id="root"></div>
+<body class="bg-slate-900 text-slate-100 min-h-screen p-4 flex flex-col items-center">
+    <div class="max-w-md w-full bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-2xl">
+        <header class="text-center mb-6">
+            <h1 class="text-3xl font-black text-yellow-400 tracking-wider">SARGEZARD</h1>
+            <p class="text-xs text-slate-400 mt-1">Scarlet & Violet: 151 Collection Tracker</p>
+            <div class="mt-4 bg-slate-900 rounded-full h-3 overflow-hidden border border-slate-700">
+                <div id="progress-bar" class="bg-yellow-400 h-full transition-all" style="width: 0%"></div>
+            </div>
+            <p id="progress-text" class="text-xs text-slate-400 mt-2 font-medium">0 / 165 Collected</p>
+        </header>
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
-
-        const MAIN_SET = [
-            { id: 1, name: "Bulbasaur", type: "Grass", hp: "70", stage: "Basic", retreat: "1", attackName: "Vine Whip", attackDmg: "30" },
-            { id: 2, name: "Ivysaur", type: "Grass", hp: "100", stage: "Stage 1", retreat: "2", attackName: "Razor Leaf", attackDmg: "60" },
-            { id: 3, name: "Venusaur ex", type: "Grass", hp: "330", stage: "Stage 2 ex", retreat: "3", attackName: "Dangerous Bloom", attackDmg: "150" },
-            { id: 4, name: "Charmander", type: "Fire", hp: "60", stage: "Basic", retreat: "1", attackName: "Live Coal", attackDmg: "20" },
-            { id: 5, name: "Charmeleon", type: "Fire", hp: "100", stage: "Stage 1", retreat: "2", attackName: "Slash", attackDmg: "50" },
-            { id: 6, name: "Charizard ex", type: "Fire", hp: "330", stage: "Stage 2 ex", retreat: "2", attackName: "Exploding Vortex", attackDmg: "180+" },
-            { id: 7, name: "Squirtle", type: "Water", hp: "60", stage: "Basic", retreat: "1", attackName: "Find a Friend", attackDmg: "-" },
-            { id: 8, name: "Wartortle", type: "Water", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Wave Splash", attackDmg: "40" },
-            { id: 9, name: "Blastoise ex", type: "Water", hp: "320", stage: "Stage 2 ex", retreat: "3", attackName: "Twin Pumps", attackDmg: "130x" },
-            { id: 10, name: "Caterpie", type: "Grass", hp: "50", stage: "Basic", retreat: "1", attackName: "Find a Friend", attackDmg: "-" },
-            { id: 11, name: "Metapod", type: "Grass", hp: "80", stage: "Stage 1", retreat: "2", attackName: "Harden", attackDmg: "-" },
-            { id: 12, name: "Butterfree", type: "Grass", hp: "140", stage: "Stage 2", retreat: "1", attackName: "Tricolor Pollen", attackDmg: "90" },
-            { id: 13, name: "Weedle", type: "Grass", hp: "50", stage: "Basic", retreat: "1", attackName: "Ram", attackDmg: "10" },
-            { id: 14, name: "Kakuna", type: "Grass", hp: "80", stage: "Stage 1", retreat: "2", attackName: "Stiff Stance", attackDmg: "-" },
-            { id: 15, name: "Beedrill", type: "Grass", hp: "130", stage: "Stage 2", retreat: "1", attackName: "Swarm Sting", attackDmg: "110" },
-            { id: 16, name: "Pidgey", type: "Colorless", hp: "60", stage: "Basic", retreat: "1", attackName: "Gust", attackDmg: "20" },
-            { id: 17, name: "Pidgeotto", type: "Colorless", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Flap", attackDmg: "40" },
-            { id: 18, name: "Pidgeot ex", type: "Colorless", hp: "280", stage: "Stage 2 ex", retreat: "0", attackName: "Blustery Wind", attackDmg: "120" },
-            { id: 19, name: "Rattata", type: "Colorless", hp: "50", stage: "Basic", retreat: "1", attackName: "Gnaw", attackDmg: "20" },
-            { id: 20, name: "Raticate", type: "Colorless", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Super Fang", attackDmg: "50" },
-            { id: 21, name: "Spearow", type: "Colorless", hp: "60", stage: "Basic", retreat: "1", attackName: "Peck", attackDmg: "20" },
-            { id: 22, name: "Fearow", type: "Colorless", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Drill Peck", attackDmg: "70" },
-            { id: 23, name: "Ekans", type: "Darkness", hp: "70", stage: "Basic", retreat: "1", attackName: "Acid", attackDmg: "20" },
-            { id: 24, name: "Arbok ex", type: "Darkness", hp: "270", stage: "Stage 1 ex", retreat: "2", attackName: "Menacing Fang", attackDmg: "150" },
-            { id: 25, name: "Pikachu", type: "Lightning", hp: "60", stage: "Basic", retreat: "1", attackName: "Electro Ball", attackDmg: "20" },
-            { id: 26, name: "Raichu", type: "Lightning", hp: "100", stage: "Stage 1", retreat: "1", attackName: "Thunder Bolt", attackDmg: "180" },
-            { id: 27, name: "Sandshrew", type: "Fighting", hp: "70", stage: "Basic", retreat: "1", attackName: "Scratch", attackDmg: "20" },
-            { id: 28, name: "Sandslash", type: "Fighting", hp: "110", stage: "Stage 1", retreat: "2", attackName: "Slash", attackDmg: "70" },
-            { id: 29, name: "Nidoran ♀", type: "Psychic", hp: "60", stage: "Basic", retreat: "1", attackName: "Poison Horn", attackDmg: "10" },
-            { id: 30, name: "Nidorina", type: "Psychic", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Sharp Fang", attackDmg: "50" },
-            { id: 31, name: "Nidoqueen", type: "Psychic", hp: "170", stage: "Stage 2", retreat: "3", attackName: "Queen Press", attackDmg: "140" },
-            { id: 32, name: "Nidoran ♂", type: "Psychic", hp: "60", stage: "Basic", retreat: "1", attackName: "Horn Attack", attackDmg: "20" },
-            { id: 33, name: "Nidorino", type: "Psychic", hp: "90", stage: "Stage 1", retreat: "2", attackName: "Super Horn", attackDmg: "100" },
-            { id: 34, name: "Nidoking", type: "Psychic", hp: "170", stage: "Stage 2", retreat: "3", attackName: "King Impact", attackDmg: "190" },
-            { id: 35, name: "Clefairy", type: "Psychic", hp: "60", stage: "Basic", retreat: "1", attackName: "Moon Kick", attackDmg: "40" },
-            { id: 36, name: "Clefable", type: "Psychic", hp: "100", stage: "Stage 1", retreat: "1", attackName: "Metronome", attackDmg: "-" },
-            { id: 37, name: "Vulpix", type: "Fire", hp: "60", stage: "Basic", retreat: "1", attackName: "Ember", attackDmg: "30" },
-            { id: 38, name: "Ninetales ex", type: "Fire", hp: "260", stage: "Stage 1 ex", retreat: "1", attackName: "Mirror Flames", attackDmg: "80+" },
-            { id: 39, name: "Jigglypuff", type: "Colorless", hp: "60", stage: "Basic", retreat: "1", attackName: "Slap", attackDmg: "20" },
-            { id: 40, name: "Wigglytuff ex", type: "Colorless", hp: "250", stage: "Stage 1 ex", retreat: "2", attackName: "Friend Tackle", attackDmg: "90+" },
-            { id: 41, name: "Zubat", type: "Darkness", hp: "50", stage: "Basic", retreat: "1", attackName: "Bite", attackDmg: "20" },
-            { id: 42, name: "Golbat", type: "Darkness", hp: "80", stage: "Stage 1", retreat: "1", attackName: "Wing Attack", attackDmg: "50" },
-            { id: 43, name: "Oddish", type: "Grass", hp: "60", stage: "Basic", retreat: "1", attackName: "Leaf Step", attackDmg: "20" },
-            { id: 44, name: "Gloom", type: "Grass", hp: "90", stage: "Stage 1", retreat: "2", attackName: "Drool", attackDmg: "40" },
-            { id: 45, name: "Vileplume", type: "Grass", hp: "150", stage: "Stage 2", retreat: "2", attackName: "Solar Beam", attackDmg: "120" },
-            { id: 46, name: "Paras", type: "Grass", hp: "70", stage: "Basic", retreat: "1", attackName: "Scratch", attackDmg: "20" },
-            { id: 47, name: "Parasect", type: "Grass", hp: "120", stage: "Stage 1", retreat: "2", attackName: "Spores", attackDmg: "70" },
-            { id: 48, name: "Venonat", type: "Grass", hp: "70", stage: "Basic", retreat: "1", attackName: "Tackle", attackDmg: "20" },
-            { id: 49, name: "Venomoth", type: "Grass", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Perplexing Powder", attackDmg: "60" },
-            { id: 50, name: "Diglett", type: "Fighting", hp: "50", stage: "Basic", retreat: "1", attackName: "Mud Slap", attackDmg: "20" },
-            { id: 51, name: "Dugtrio", type: "Fighting", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Headbutt", attackDmg: "60" },
-            { id: 52, name: "Meowth", type: "Colorless", hp: "70", stage: "Basic", retreat: "1", attackName: "Pay Day", attackDmg: "10" },
-            { id: 53, name: "Persian", type: "Colorless", hp: "100", stage: "Stage 1", retreat: "1", attackName: "Slashing Claw", attackDmg: "70" },
-            { id: 54, name: "Psyduck", type: "Water", hp: "70", stage: "Basic", retreat: "1", attackName: "Water Gun", attackDmg: "20" },
-            { id: 55, name: "Golduck", type: "Water", hp: "110", stage: "Stage 1", retreat: "1", attackName: "Aqua Jet", attackDmg: "70" },
-            { id: 56, name: "Mankey", type: "Fighting", hp: "60", stage: "Basic", retreat: "1", attackName: "Low Kick", attackDmg: "20" },
-            { id: 57, name: "Primeape", type: "Fighting", hp: "100", stage: "Stage 1", retreat: "2", attackName: "Rage Strike", attackDmg: "50x" },
-            { id: 58, name: "Growlithe", type: "Fire", hp: "80", stage: "Basic", retreat: "2", attackName: "Bite", attackDmg: "30" },
-            { id: 59, name: "Arcanine", type: "Fire", hp: "130", stage: "Stage 1", retreat: "2", attackName: "Flame Flare", attackDmg: "100" },
-            { id: 60, name: "Poliwag", type: "Water", hp: "60", stage: "Basic", retreat: "1", attackName: "Bubble", attackDmg: "10" },
-            { id: 61, name: "Poliwhirl", type: "Water", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Wave Splash", attackDmg: "40" },
-            { id: 62, name: "Poliwrath", type: "Water", hp: "160", stage: "Stage 2", retreat: "2", attackName: "Dynamic Punch", attackDmg: "100+" },
-            { id: 63, name: "Abra", type: "Psychic", hp: "50", stage: "Basic", retreat: "1", attackName: "Teleportation Burst", attackDmg: "10" },
-            { id: 64, name: "Kadabra", type: "Psychic", hp: "80", stage: "Stage 1", retreat: "1", attackName: "Psybeam", attackDmg: "40" },
-            { id: 65, name: "Alakazam ex", type: "Psychic", hp: "310", stage: "Stage 2 ex", retreat: "1", attackName: "Dimensional Hand", attackDmg: "120" },
-            { id: 66, name: "Machop", type: "Fighting", hp: "70", stage: "Basic", retreat: "2", attackName: "Mountain Gale", attackDmg: "50" },
-            { id: 67, name: "Machoke", type: "Fighting", hp: "100", stage: "Stage 1", retreat: "2", attackName: "Seismic Toss", attackDmg: "60" },
-            { id: 68, name: "Machamp", type: "Fighting", hp: "180", stage: "Stage 2", retreat: "3", attackName: "Giga Hammer", attackDmg: "200" },
-            { id: 69, name: "Bellsprout", type: "Grass", hp: "60", stage: "Basic", retreat: "1", attackName: "Vine Whip", attackDmg: "20" },
-            { id: 70, name: "Weepinbell", type: "Grass", hp: "90", stage: "Stage 1", retreat: "2", attackName: "Spit Poison", attackDmg: "30" },
-            { id: 71, name: "Victreebel", type: "Grass", hp: "150", stage: "Stage 2", retreat: "2", attackName: "Acid", attackDmg: "120" },
-            { id: 72, name: "Tentacool", type: "Water", hp: "60", stage: "Basic", retreat: "1", attackName: "Poison Sting", attackDmg: "10" },
-            { id: 73, name: "Tentacruel", type: "Water", hp: "120", stage: "Stage 1", retreat: "2", attackName: "Tentacle Spike", attackDmg: "90" },
-            { id: 74, name: "Geodude", type: "Fighting", hp: "70", stage: "Basic", retreat: "1", attackName: "Rock Throw", attackDmg: "20" },
-            { id: 75, name: "Graveler", type: "Fighting", hp: "100", stage: "Stage 1", retreat: "3", attackName: "Heavy Roll", attackDmg: "60" },
-            { id: 76, name: "Golem ex", type: "Fighting", hp: "330", stage: "Stage 2 ex", retreat: "4", attackName: "Dynamic Bomber", attackDmg: "180" },
-            { id: 77, name: "Ponyta", type: "Fire", hp: "70", stage: "Basic", retreat: "1", attackName: "Stomp", attackDmg: "20+" },
-            { id: 78, name: "Rapidash", type: "Fire", hp: "100", stage: "Stage 1", retreat: "1", attackName: "Fire Spin", attackDmg: "90" },
-            { id: 79, name: "Slowpoke", type: "Water", hp: "80", stage: "Basic", retreat: "2", attackName: "Yawn", attackDmg: "-" },
-            { id: 80, name: "Slowbro", type: "Water", hp: "100", stage: "Stage 1", retreat: "2", attackName: "Lazy Headbutt", attackDmg: "100" },
-            { id: 81, name: "Magnemite", type: "Lightning", hp: "60", stage: "Basic", retreat: "1", attackName: "Magnetic Blast", attackDmg: "20" },
-            { id: 82, name: "Magneton", type: "Lightning", hp: "100", stage: "Stage 1", retreat: "2", attackName: "Thunder Bolt", attackDmg: "90" },
-            { id: 83, name: "Farfetch'd", type: "Colorless", hp: "80", stage: "Basic", retreat: "1", attackName: "Leek Lash", attackDmg: "40" },
-            { id: 84, name: "Doduo", type: "Colorless", hp: "70", stage: "Basic", retreat: "1", attackName: "Peck", attackDmg: "20" },
-            { id: 85, name: "Dodrio", type: "Colorless", hp: "100", stage: "Stage 1", retreat: "1", attackName: "Ballistic Beak", attackDmg: "10+" },
-            { id: 86, name: "Seel", type: "Water", hp: "80", stage: "Basic", retreat: "2", attackName: "Headbutt", attackDmg: "30" },
-            { id: 87, name: "Dewgong", type: "Water", hp: "120", stage: "Stage 1", retreat: "2", attackName: "Freezing Ice", attackDmg: "100" },
-            { id: 88, name: "Grimer", type: "Darkness", hp: "80", stage: "Basic", retreat: "2", attackName: "Sludge", attackDmg: "30" },
-            { id: 89, name: "Muk", type: "Darkness", hp: "130", stage: "Stage 1", retreat: "3", attackName: "Venomous Mud", attackDmg: "80" },
-            { id: 90, name: "Shellder", type: "Water", hp: "70", stage: "Basic", retreat: "1", attackName: "Tongue Slap", attackDmg: "20" },
-            { id: 91, name: "Cloyster", type: "Water", hp: "130", stage: "Stage 1", retreat: "2", attackName: "Spike Cannon", attackDmg: "50x" },
-            { id: 92, name: "Gastly", type: "Psychic", hp: "60", stage: "Basic", retreat: "1", attackName: "Suffocating Gas", attackDmg: "20" },
-            { id: 93, name: "Haunter", type: "Psychic", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Will-O-Wisp", attackDmg: "40" },
-            { id: 94, name: "Gengar", type: "Psychic", hp: "130", stage: "Stage 2", retreat: "1", attackName: "Poltergeist", attackDmg: "50x" },
-            { id: 95, name: "Onix", type: "Fighting", hp: "120", stage: "Basic", retreat: "3", attackName: "Thick Head", attackDmg: "80" },
-            { id: 96, name: "Drowzee", type: "Psychic", hp: "70", stage: "Basic", retreat: "1", attackName: "Pound", attackDmg: "20" },
-            { id: 97, name: "Hypno", type: "Psychic", hp: "100", stage: "Stage 1", retreat: "2", attackName: "Zen Headbutt", attackDmg: "60" },
-            { id: 98, name: "Krabby", type: "Water", hp: "70", stage: "Basic", retreat: "2", attackName: "Vise Grip", attackDmg: "30" },
-            { id: 99, name: "Kingler", type: "Water", hp: "140", stage: "Stage 1", retreat: "3", attackName: "Claw Slash", attackDmg: "110" },
-            { id: 100, name: "Voltorb", type: "Lightning", hp: "60", stage: "Basic", retreat: "1", attackName: "Rollout", attackDmg: "20" },
-            { id: 101, name: "Electrode", type: "Lightning", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Electro Ball", attackDmg: "70" },
-            { id: 102, name: "Exeggcute", type: "Grass", hp: "60", stage: "Basic", retreat: "1", attackName: "Hypnosis", attackDmg: "-" },
-            { id: 103, name: "Exeggutor", type: "Grass", hp: "160", stage: "Stage 1", retreat: "3", attackName: "Solar Beam", attackDmg: "130" },
-            { id: 104, name: "Cubone", type: "Fighting", hp: "70", stage: "Basic", retreat: "1", attackName: "Headbutt", attackDmg: "30" },
-            { id: 105, name: "Marowak", type: "Fighting", hp: "120", stage: "Stage 1", retreat: "2", attackName: "Bonemerang", attackDmg: "70x" },
-            { id: 106, name: "Hitmonlee", type: "Fighting", hp: "120", stage: "Basic", retreat: "1", attackName: "Stretch Kick", attackDmg: "30" },
-            { id: 107, name: "Hitmonchan", type: "Fighting", hp: "120", stage: "Basic", retreat: "1", attackName: "Counter", attackDmg: "20+" },
-            { id: 108, name: "Lickitung", type: "Colorless", hp: "100", stage: "Basic", retreat: "3", attackName: "Tongue Slap", attackDmg: "50" },
-            { id: 109, name: "Koffing", type: "Darkness", hp: "60", stage: "Basic", retreat: "1", attackName: "Tackle", attackDmg: "20" },
-            { id: 110, name: "Weezing", type: "Darkness", hp: "110", stage: "Stage 1", retreat: "2", attackName: "Spinning Gas", attackDmg: "50" },
-            { id: 111, name: "Rhyhorn", type: "Fighting", hp: "100", stage: "Basic", retreat: "3", attackName: "Horn Attack", attackDmg: "50" },
-            { id: 112, name: "Rhydon", type: "Fighting", hp: "140", stage: "Stage 1", retreat: "3", attackName: "Horn Drill", attackDmg: "90" },
-            { id: 113, name: "Chansey", type: "Colorless", hp: "110", stage: "Basic", retreat: "2", attackName: "Gentle Slap", attackDmg: "50" },
-            { id: 114, name: "Tangela", type: "Grass", hp: "80", stage: "Basic", retreat: "2", attackName: "Vine Whip", attackDmg: "30" },
-            { id: 115, name: "Kangaskhan ex", type: "Colorless", hp: "230", stage: "Basic ex", retreat: "2", attackName: "Dizzy Punch", attackDmg: "100x" },
-            { id: 116, name: "Horsea", type: "Water", hp: "60", stage: "Basic", retreat: "1", attackName: "Reverse Thrust", attackDmg: "10" },
-            { id: 117, name: "Seadra", type: "Water", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Sharp Fin", attackDmg: "40" },
-            { id: 118, name: "Goldeen", type: "Water", hp: "70", stage: "Basic", retreat: "1", attackName: "Peck", attackDmg: "20" },
-            { id: 119, name: "Seaking", type: "Water", hp: "110", stage: "Stage 1", retreat: "1", attackName: "Waterfall", attackDmg: "80" },
-            { id: 120, name: "Staryu", type: "Water", hp: "60", stage: "Basic", retreat: "1", attackName: "Swift", attackDmg: "20" },
-            { id: 121, name: "Starmie", type: "Water", hp: "100", stage: "Stage 1", retreat: "1", attackName: "Star Freeze", attackDmg: "50" },
-            { id: 122, name: "Mr. Mime", type: "Psychic", hp: "90", stage: "Basic", retreat: "1", attackName: "Magic Light", attackDmg: "30" },
-            { id: 123, name: "Scyther", type: "Grass", hp: "90", stage: "Basic", retreat: "1", attackName: "Slash", attackDmg: "40" },
-            { id: 124, name: "Jynx ex", type: "Psychic", hp: "200", stage: "Basic ex", retreat: "1", attackName: "Heart-Taken Kiss", attackDmg: "120" },
-            { id: 125, name: "Electabuzz", type: "Lightning", hp: "90", stage: "Basic", retreat: "2", attackName: "Light Punch", attackDmg: "30" },
-            { id: 126, name: "Magmar", type: "Fire", hp: "90", stage: "Basic", retreat: "2", attackName: "Live Coal", attackDmg: "30" },
-            { id: 127, name: "Pinsir", type: "Grass", hp: "100", stage: "Basic", retreat: "2", attackName: "Squeeze Claws", attackDmg: "50" },
-            { id: 128, name: "Tauros", type: "Colorless", hp: "120", stage: "Basic", retreat: "2", attackName: "Raging Bull", attackDmg: "30+" },
-            { id: 129, name: "Magikarp", type: "Water", hp: "30", stage: "Basic", retreat: "1", attackName: "Splash", attackDmg: "10" },
-            { id: 130, name: "Gyarados", type: "Water", hp: "180", stage: "Stage 1", retreat: "3", attackName: "Hyper Beam", attackDmg: "150" },
-            { id: 131, name: "Lapras", type: "Water", hp: "110", stage: "Basic", retreat: "2", attackName: "Sail", attackDmg: "50" },
-            { id: 132, name: "Ditto", type: "Colorless", hp: "70", stage: "Basic", retreat: "1", attackName: "Transform", attackDmg: "-" },
-            { id: 133, name: "Eevee", type: "Colorless", hp: "70", stage: "Basic", retreat: "1", attackName: "Tackle", attackDmg: "20" },
-            { id: 134, name: "Vaporeon", type: "Water", hp: "130", stage: "Stage 1", retreat: "2", attackName: "Spiral Drain", attackDmg: "90" },
-            { id: 135, name: "Jolteon", type: "Lightning", hp: "110", stage: "Stage 1", retreat: "1", attackName: "Pin Missile", attackDmg: "60x" },
-            { id: 136, name: "Flareon", type: "Fire", hp: "130", stage: "Stage 1", retreat: "2", attackName: "Flamethrower", attackDmg: "130" },
-            { id: 137, name: "Porygon", type: "Colorless", hp: "60", stage: "Basic", retreat: "1", attackName: "Data Blur", attackDmg: "20" },
-            { id: 138, name: "Omanyte", type: "Water", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Water Gun", attackDmg: "50" },
-            { id: 139, name: "Omastar", type: "Water", hp: "140", stage: "Stage 2", retreat: "2", attackName: "Ancient Tentacles", attackDmg: "100" },
-            { id: 140, name: "Kabuto", type: "Water", hp: "90", stage: "Stage 1", retreat: "1", attackName: "Scratch", attackDmg: "40" },
-            { id: 141, name: "Kabutops", type: "Water", hp: "150", stage: "Stage 2", retreat: "2", attackName: "Drain Cut", attackDmg: "100" },
-            { id: 142, name: "Aerodactyl", type: "Colorless", hp: "130", stage: "Stage 1", retreat: "1", attackName: "Speed Attack", attackDmg: "100" },
-            { id: 143, name: "Snorlax", type: "Colorless", hp: "150", stage: "Basic", retreat: "4", attackName: "Body Slam", attackDmg: "100" },
-            { id: 144, name: "Articuno", type: "Water", hp: "120", stage: "Basic", retreat: "2", attackName: "Ice Wing", attackDmg: "90" },
-            { id: 145, name: "Zapdos ex", type: "Lightning", hp: "200", stage: "Basic ex", retreat: "1", attackName: "Multishot Lightning", attackDmg: "120" },
-            { id: 146, name: "Moltres", type: "Fire", hp: "120", stage: "Basic", retreat: "2", attackName: "Flame Wing", attackDmg: "110" },
-            { id: 147, name: "Dratini", type: "Dragon", hp: "70", stage: "Basic", retreat: "1", attackName: "Shed Skin", attackDmg: "-" },
-            { id: 148, name: "Dragonair", type: "Dragon", hp: "100", stage: "Stage 1", retreat: "2", attackName: "Slam", attackDmg: "60x" },
-            { id: 149, name: "Dragonite", type: "Dragon", hp: "180", stage: "Stage 2", retreat: "3", attackName: "Jet Headbutt", attackDmg: "180" },
-            { id: 150, name: "Mewtwo", type: "Psychic", hp: "130", stage: "Basic", retreat: "2", attackName: "Psystrike", attackDmg: "130" },
-            { id: 151, name: "Mew ex", type: "Psychic", hp: "180", stage: "Basic ex", retreat: "0", attackName: "Genome Hack", attackDmg: "-" },
+        <!-- Card View Area -->
+        <div id="card-container" class="space-y-4">
+            <div class="flex justify-between items-center bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-700">
+                <span id="card-number" class="text-xs font-bold bg-slate-800 px-2.5 py-1 rounded-full text-slate-300">#1</span>
+                <span id="card-type" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-950 text-blue-300 border border-blue-800">Grass</span>
+            </div>
             
-            // TRAINERS (#152 to #165)
-            { id: 152, name: "Dome Fossil", type: "Trainer", category: "Item", hp: "60", desc: "Play as a 60 HP Basic Pokémon." },
-            { id: 153, name: "Helix Fossil", type: "Trainer", category: "Item", hp: "60", desc: "Play as a 60 HP Basic Pokémon." },
-            { id: 154, name: "Old Amber", type: "Trainer", category: "Item", hp: "60", desc: "Look at top 4 cards of your deck, reveal an Aerodactyl." },
-            { id: 155, name: "Big Air Balloon", type: "Trainer", category: "Tool", desc: "The Stage 2 Pokémon this card is attached to has no Retreat Cost." },
-            { id: 156, name: "Bill's Transfer", type: "Trainer", category: "Supporter", desc: "Look at top 8 cards of your deck, reveal a Pokémon." },
-            { id: 157, name: "Cycling Road", type: "Trainer", category: "Stadium", desc: "Once during each player's turn, discard a Basic Energy to draw a card." },
-            { id: 158, name: "Daisy's Help", type: "Trainer", category: "Supporter", desc: "Draw 2 cards. Look at all of your face-down Prize cards." },
-            { id: 159, name: "Energy Sticker", type: "Trainer", category: "Item", desc: "Flip a coin. If heads, attach a basic Energy card from discard pile." },
-            { id: 160, name: "Erika's Invitation", type: "Trainer", category: "Supporter", desc: "Look at opponent's hand, put a Basic Pokémon onto their Bench." },
-            { id: 161, name: "Giovanni's Charisma", type: "Trainer", category: "Supporter", desc: "Put an Energy from opponent's Active Pokémon into their hand." },
-            { id: 162, name: "Grabber", type: "Trainer", category: "Item", desc: "Look at opponent's hand, choose a Pokémon and put it on bottom of deck." },
-            { id: 163, name: "Leftovers", type: "Trainer", category: "Tool", desc: "At the end of your turn, heal 20 damage from the Pokémon this card is attached to." },
-            { id: 164, name: "Rigid Band", type: "Trainer", category: "Tool", desc: "Stage 1 Pokémon takes 30 less damage from opponent's attacks." },
-            { id: 165, name: "Safety Goggles", type: "Trainer", category: "Tool", desc: "Basic Pokémon has no Weakness." }
+            <h2 id="card-name" class="text-2xl font-black text-white text-center">Bulbasaur</h2>
+            
+            <div class="bg-slate-950 border border-slate-800 rounded-xl h-64 flex items-center justify-center overflow-hidden p-2">
+                <img id="card-image" src="https://images.pokemontcg.io/sv3pt5/1_hires.png" alt="Card Scan" class="h-full object-contain rounded-md shadow-lg" />
+            </div>
+
+            <!-- Quantities -->
+            <div class="grid grid-cols-3 gap-2 pt-2">
+                <div class="bg-slate-900 border border-slate-700 rounded-xl p-2 text-center">
+                    <span class="block text-[10px] font-bold text-slate-300 mb-1">Standard</span>
+                    <select id="qty-normal" onchange="updateQty('normal', this.value)" class="bg-slate-950 text-yellow-400 font-bold text-xs rounded px-2 py-1 w-full border border-slate-700">
+                        <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+                    </select>
+                </div>
+                <div class="bg-purple-950/40 border border-purple-800/60 rounded-xl p-2 text-center">
+                    <span class="block text-[10px] font-bold text-purple-300 mb-1">✨ Holo</span>
+                    <select id="qty-holo" onchange="updateQty('holo', this.value)" class="bg-slate-950 text-purple-300 font-bold text-xs rounded px-2 py-1 w-full border border-slate-700">
+                        <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+                    </select>
+                </div>
+                <div class="bg-indigo-950/40 border border-indigo-800/60 rounded-xl p-2 text-center">
+                    <span class="block text-[10px] font-bold text-indigo-300 mb-1">🌟 Rev Holo</span>
+                    <select id="qty-rev" onchange="updateQty('rev', this.value)" class="bg-slate-950 text-indigo-300 font-bold text-xs rounded px-2 py-1 w-full border border-slate-700">
+                        <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="flex gap-2 pt-3">
+                <button onclick="changeCard(-1)" class="flex-1 bg-slate-700 hover:bg-slate-600 py-3 rounded-xl text-xs font-bold text-slate-200 transition-all">Previous</button>
+                <button onclick="changeCard(1)" class="flex-1 bg-yellow-500 hover:bg-yellow-400 py-3 rounded-xl text-xs font-bold text-slate-950 transition-all">Next Card</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cards = [
+            { id: 1, name: "Bulbasaur", type: "Grass" },
+            { id: 2, name: "Ivysaur", type: "Grass" },
+            { id: 3, name: "Venusaur ex", type: "Grass" },
+            { id: 4, name: "Charmander", type: "Fire" },
+            { id: 5, name: "Charmeleon", type: "Fire" },
+            { id: 6, name: "Charizard ex", type: "Fire" },
+            { id: 7, name: "Squirtle", type: "Water" },
+            { id: 8, name: "Wartortle", type: "Water" },
+            { id: 9, name: "Blastoise ex", type: "Water" },
+            { id: 151, name: "Mew ex", type: "Psychic" },
+            { id: 152, name: "Dome Fossil", type: "Trainer" },
+            { id: 165, name: "Safety Goggles", type: "Trainer" }
         ];
 
-        // Direct image URL generator targeting official Pokémon 151 set card scans
-        const getCardImageUrl = (id) => {
-            return `https://images.pokemontcg.io/sv3pt5/${id}_hires.png`;
-        };
+        let currentIndex = 0;
+        let collection = JSON.parse(localStorage.getItem('sargezard_data')) || {};
 
-        function App() {
-            const [cards, setCards] = useState(() => {
-                const saved = localStorage.getItem('sargezard_cards_v10');
-                if (saved) {
-                    try { return JSON.parse(saved); } catch (e) {}
-                }
-                return MAIN_SET.map(c => ({
-                    ...c,
-                    normalQty: 0,
-                    holoQty: 0,
-                    revHoloQty: 0
-                }));
-            });
+        function render() {
+            const card = cards[currentIndex];
+            document.getElementById('card-number').innerText = `#${card.id}`;
+            document.getElementById('card-type').innerText = card.type;
+            document.getElementById('card-name').innerText = card.name;
+            document.getElementById('card-image').src = `https://images.pokemontcg.io/sv3pt5/${card.id}_hires.png`;
 
-            const [currentIndex, setCurrentIndex] = useState(0);
-            const importInputRef = useRef(null);
+            const data = collection[card.id] || { normal: 0, holo: 0, rev: 0 };
+            document.getElementById('qty-normal').value = data.normal;
+            document.getElementById('qty-holo').value = data.holo;
+            document.getElementById('qty-rev').value = data.rev;
 
-            useEffect(() => {
-                localStorage.setItem('sargezard_cards_v10', JSON.stringify(cards));
-            }, [cards]);
-
-            const currentCard = cards[currentIndex] || cards[0];
-
-            const updateCard = (updates) => {
-                setCards(prev => prev.map(c => c.id === currentCard.id ? { ...c, ...updates } : c));
-            };
-
-            const exportData = () => {
-                const payload = JSON.stringify({
-                    app: "SARGEZARD_151_TRACKER",
-                    version: "2.0",
-                    exportedAt: new Date().toISOString(),
-                    cards: cards
-                }, null, 2);
-
-                const blob = new Blob([payload], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `sargezard-collection.sargezard`;
-                a.click();
-                URL.revokeObjectURL(url);
-            };
-
-            const importData = (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    try {
-                        const parsed = JSON.parse(event.target.result);
-                        if (parsed && parsed.cards) {
-                            setCards(parsed.cards);
-                            alert("Collection updated successfully!");
-                        }
-                    } catch (err) {
-                        alert("Invalid backup file.");
-                    }
-                };
-                reader.readAsText(file);
-            };
-
-            const totalOwned = cards.filter(c => c.normalQty > 0 || c.holoQty > 0 || c.revHoloQty > 0).length;
-
-            return (
-                <div className="max-w-md mx-auto p-4 flex flex-col min-h-screen pb-10">
-                    <header className="mb-4">
-                        <h1 className="text-2xl font-black text-yellow-400">SARGEZARD</h1>
-                        <p className="text-xs text-slate-400">Scarlet & Violet: 151 Official Card Tracker</p>
-                        <div className="mt-2 bg-slate-800 rounded-full h-2.5 overflow-hidden border border-slate-700">
-                            <div className="bg-yellow-400 h-full transition-all" style={{ width: `${(totalOwned / cards.length) * 100}%` }}></div>
-                        </div>
-                        <p className="text-xs text-right mt-1 text-slate-400">{totalOwned} / {cards.length} Collected</p>
-                        
-                        <div className="mt-3">
-                            <label className="block text-[11px] font-semibold text-slate-400 mb-1">🔍 Quick Jump to Card:</label>
-                            <select 
-                                value={currentIndex} 
-                                onChange={(e) => setCurrentIndex(Number(e.target.value))}
-                                className="w-full bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-xl p-2.5 focus:outline-none focus:border-yellow-400"
-                            >
-                                {cards.map((c, index) => {
-                                    const isOwned = c.normalQty > 0 || c.holoQty > 0 || c.revHoloQty > 0;
-                                    return (
-                                        <option key={c.id} value={index}>
-                                            #{c.id} {c.name} {c.type === "Trainer" ? `[${c.category}]` : ""} {isOwned ? "✓" : ""}
-                                        </option>
-                                    );
-                                })}
-                            </select>
-                        </div>
-                    </header>
-
-                    <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4 shadow-xl flex-1 flex flex-col justify-between space-y-4">
-                        <div>
-                            <div className="flex justify-between items-center mb-2">
-                                <span className="text-xs font-bold bg-slate-700 px-2.5 py-1 rounded-full text-slate-300">#{currentCard.id}</span>
-                                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-950 text-blue-300 border border-blue-800">{currentCard.type} {currentCard.category ? `• ${currentCard.category}` : ""}</span>
-                            </div>
-                            <h2 className="text-xl font-extrabold text-white mb-2">{currentCard.name}</h2>
-                            
-                            {/* Display Official Card Image Scan */}
-                            <div className="relative bg-slate-950 border border-slate-800 rounded-xl h-64 flex items-center justify-center overflow-hidden mb-3 p-2">
-                                <img 
-                                    src={getCardImageUrl(currentCard.id)} 
-                                    alt={currentCard.name} 
-                                    className="h-full object-contain rounded-md shadow-md"
-                                    onError={(e) => {
-                                        e.target.onerror = null;
-                                        e.target.style.display = 'none';
-                                    }}
-                                />
-                            </div>
-
-                            {/* Card Stats / Description */}
-                            <div className="bg-slate-900/60 p-2.5 rounded-xl border border-slate-700/60 text-xs space-y-1.5 mb-3">
-                                {currentCard.type !== "Trainer" ? (
-                                    <>
-                                        <div className="grid grid-cols-3 gap-2 text-center pb-1.5 border-b border-slate-800">
-                                            <div><span className="block text-slate-500">HP</span><strong className="text-slate-200">{currentCard.hp}</strong></div>
-                                            <div><span className="block text-slate-500">Stage</span><strong className="text-slate-200">{currentCard.stage}</strong></div>
-                                            <div><span className="block text-slate-500">Retreat</span><strong className="text-slate-200">{currentCard.retreat}</strong></div>
-                                        </div>
-                                        {currentCard.attackName && (
-                                            <div className="flex justify-between font-bold text-yellow-300 pt-0.5">
-                                                <span>⚔️ {currentCard.attackName}</span>
-                                                <span>{currentCard.attackDmg}</span>
-                                            </div>
-                                        )}
-                                    </>
-                                ) : (
-                                    <p className="text-slate-300 text-[11px] leading-snug">{currentCard.desc}</p>
-                                )}
-                            </div>
-
-                            <div className="grid grid-cols-3 gap-2 mb-3">
-                                <div className={`border rounded-xl p-2 flex flex-col items-center justify-center ${currentCard.normalQty > 0 ? 'bg-slate-800 border-slate-500' : 'bg-slate-900 border-slate-700'}`}>
-                                    <span className="text-[10px] font-bold text-slate-300 mb-1">Standard</span>
-                                    <select 
-                                        value={currentCard.normalQty} 
-                                        onChange={(e) => updateCard({ normalQty: Number(e.target.value) })}
-                                        className="bg-slate-950 text-yellow-400 font-bold text-xs rounded px-2 py-1 focus:outline-none border border-slate-700"
-                                    >
-                                        {[0,1,2,3,4,5,6,7,8,9,10].map(n => <option key={n} value={n}>{n}</option>)}
-                                    </select>
-                                </div>
-
-                                <div className={`border rounded-xl p-2 flex flex-col items-center justify-center ${currentCard.holoQty > 0 ? 'bg-purple-950/60 border-purple-500' : 'bg-slate-900 border-slate-700'}`}>
-                                    <span className="text-[10px] font-bold text-purple-300 mb-1">✨ Holo</span>
-                                    <select 
-                                        value={currentCard.holoQty} 
-                                        onChange={(e) => updateCard({ holoQty: Number(e.target.value) })}
-                                        className="bg-slate-950 text-purple-300 font-bold text-xs rounded px-2 py-1 focus:outline-none border border-slate-700"
-                                    >
-                                        {[0,1,2,3,4,5,6,7,8,9,10].map(n => <option key={n} value={n}>{n}</option>)}
-                                    </select>
-                                </div>
-
-                                <div className={`border rounded-xl p-2 flex flex-col items-center justify-center ${currentCard.revHoloQty > 0 ? 'bg-indigo-950/60 border-indigo-500' : 'bg-slate-900 border-slate-700'}`}>
-                                    <span className="text-[10px] font-bold text-indigo-300 mb-1">🌟 Rev Holo</span>
-                                    <select 
-                                        value={currentCard.revHoloQty} 
-                                        onChange={(e) => updateCard({ revHoloQty: Number(e.target.value) })}
-                                        className="bg-slate-950 text-indigo-300 font-bold text-xs rounded px-2 py-1 focus:outline-none border border-slate-700"
-                                    >
-                                        {[0,1,2,3,4,5,6,7,8,9,10].map(n => <option key={n} value={n}>{n}</option>)}
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <div className={`w-full py-2 rounded-xl font-bold text-center text-xs shadow-md ${(currentCard.normalQty > 0 || currentCard.holoQty > 0 || currentCard.revHoloQty > 0) ? 'bg-emerald-600/30 text-emerald-300 border border-emerald-500/50' : 'bg-slate-900 text-slate-500 border border-slate-700'}`}>
-                                {(currentCard.normalQty > 0 || currentCard.holoQty > 0 || currentCard.revHoloQty > 0) ? '✓ Registered in Collection' : 'Not Yet Collected'}
-                            </div>
-
-                            <div className="flex gap-2">
-                                <button onClick={() => setCurrentIndex(p => Math.max(0, p - 1))} className="flex-1 bg-slate-700 hover:bg-slate-600 py-2.5 rounded-xl text-xs font-semibold">Previous</button>
-                                <button onClick={() => setCurrentIndex(p => Math.min(cards.length - 1, p + 1))} className="flex-1 bg-slate-700 hover:bg-slate-600 py-2.5 rounded-xl text-xs font-semibold">Next</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex gap-2 mt-4">
-                        <button onClick={exportData} className="flex-1 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold py-3 rounded-xl shadow-lg text-xs transition-all">
-                            📤 Export Backup
-                        </button>
-                        <button onClick={() => importInputRef.current.click()} className="flex-1 bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold py-3 rounded-xl shadow-lg text-xs transition-all border border-slate-600">
-                            📥 Load Backup
-                        </button>
-                        <input type="file" ref={importInputRef} onChange={importData} accept=".sargezard,.json" className="hidden" />
-                    </div>
-                </div>
-            );
+            updateProgress();
         }
 
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+        function updateQty(type, val) {
+            const card = cards[currentIndex];
+            if (!collection[card.id]) collection[card.id] = { normal: 0, holo: 0, rev: 0 };
+            collection[card.id][type] = Number(val);
+            localStorage.setItem('sargezard_data', JSON.stringify(collection));
+            updateProgress();
+        }
+
+        function changeCard(dir) {
+            currentIndex = (currentIndex + dir + cards.length) % cards.length;
+            render();
+        }
+
+        function updateProgress() {
+            let owned = 0;
+            cards.forEach(c => {
+                const d = collection[c.id];
+                if (d && (d.normal > 0 || d.holo > 0 || d.rev > 0)) owned++;
+            });
+            const pct = (owned / cards.length) * 100;
+            document.getElementById('progress-bar').style.width = pct + '%';
+            document.getElementById('progress-text').innerText = `${owned} / ${cards.length} Collected`;
+        }
+
+        render();
     </script>
 </body>
 </html>
