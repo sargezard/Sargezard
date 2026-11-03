@@ -7,118 +7,67 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen p-4 flex flex-col items-center">
-    <div class="max-w-md w-full bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-2xl">
-        <header class="text-center mb-6">
+    <div class="max-w-md w-full bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-2xl mb-10">
+        <header class="text-center mb-4">
             <h1 class="text-3xl font-black text-yellow-400 tracking-wider">SARGEZARD</h1>
             <p class="text-xs text-slate-400 mt-1">Scarlet & Violet: 151 Collection Tracker</p>
-            <div class="mt-4 bg-slate-900 rounded-full h-3 overflow-hidden border border-slate-700">
+            <div class="mt-3 bg-slate-900 rounded-full h-3 overflow-hidden border border-slate-700">
                 <div id="progress-bar" class="bg-yellow-400 h-full transition-all" style="width: 0%"></div>
             </div>
             <p id="progress-text" class="text-xs text-slate-400 mt-2 font-medium">0 / 165 Collected</p>
+            
+            <!-- Quick Jump Dropdown -->
+            <div class="mt-4 text-left">
+                <label class="block text-[11px] font-semibold text-slate-400 mb-1">🔍 Quick Jump to Card:</label>
+                <select id="quick-jump" onchange="jumpToCard(this.value)" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-xl p-2.5 focus:outline-none focus:border-yellow-400">
+                    <!-- Populated via script -->
+                </select>
+            </div>
         </header>
 
         <!-- Card View Area -->
-        <div id="card-container" class="space-y-4">
+        <div id="card-container" class="space-y-3">
             <div class="flex justify-between items-center bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-700">
                 <span id="card-number" class="text-xs font-bold bg-slate-800 px-2.5 py-1 rounded-full text-slate-300">#1</span>
                 <span id="card-type" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-950 text-blue-300 border border-blue-800">Grass</span>
             </div>
             
-            <h2 id="card-name" class="text-2xl font-black text-white text-center">Bulbasaur</h2>
+            <div>
+                <h2 id="card-name" class="text-2xl font-black text-white">Bulbasaur</h2>
+                <p id="card-artist" class="text-xs text-slate-400 mt-0.5">🎨 Illus. Yoriyuki Ikegami</p>
+            </div>
             
             <div class="bg-slate-950 border border-slate-800 rounded-xl h-64 flex items-center justify-center overflow-hidden p-2">
                 <img id="card-image" src="https://images.pokemontcg.io/sv3pt5/1_hires.png" alt="Card Scan" class="h-full object-contain rounded-md shadow-lg" />
             </div>
 
+            <!-- Card Stats or Description Box -->
+            <div id="card-info-box" class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-700/60 text-xs space-y-1.5">
+                <!-- Dynamically filled -->
+            </div>
+
             <!-- Quantities -->
-            <div class="grid grid-cols-3 gap-2 pt-2">
+            <div class="grid grid-cols-3 gap-2 pt-1">
                 <div class="bg-slate-900 border border-slate-700 rounded-xl p-2 text-center">
                     <span class="block text-[10px] font-bold text-slate-300 mb-1">Standard</span>
                     <select id="qty-normal" onchange="updateQty('normal', this.value)" class="bg-slate-950 text-yellow-400 font-bold text-xs rounded px-2 py-1 w-full border border-slate-700">
-                        <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+                        <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
                     </select>
                 </div>
                 <div class="bg-purple-950/40 border border-purple-800/60 rounded-xl p-2 text-center">
                     <span class="block text-[10px] font-bold text-purple-300 mb-1">✨ Holo</span>
                     <select id="qty-holo" onchange="updateQty('holo', this.value)" class="bg-slate-950 text-purple-300 font-bold text-xs rounded px-2 py-1 w-full border border-slate-700">
-                        <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+                        <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
                     </select>
                 </div>
                 <div class="bg-indigo-950/40 border border-indigo-800/60 rounded-xl p-2 text-center">
                     <span class="block text-[10px] font-bold text-indigo-300 mb-1">🌟 Rev Holo</span>
                     <select id="qty-rev" onchange="updateQty('rev', this.value)" class="bg-slate-950 text-indigo-300 font-bold text-xs rounded px-2 py-1 w-full border border-slate-700">
-                        <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+                        <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
                     </select>
                 </div>
             </div>
 
-            <!-- Navigation Controls -->
-            <div class="flex gap-2 pt-3">
-                <button onclick="changeCard(-1)" class="flex-1 bg-slate-700 hover:bg-slate-600 py-3 rounded-xl text-xs font-bold text-slate-200 transition-all">Previous</button>
-                <button onclick="changeCard(1)" class="flex-1 bg-yellow-500 hover:bg-yellow-400 py-3 rounded-xl text-xs font-bold text-slate-950 transition-all">Next Card</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const cards = [
-            { id: 1, name: "Bulbasaur", type: "Grass" },
-            { id: 2, name: "Ivysaur", type: "Grass" },
-            { id: 3, name: "Venusaur ex", type: "Grass" },
-            { id: 4, name: "Charmander", type: "Fire" },
-            { id: 5, name: "Charmeleon", type: "Fire" },
-            { id: 6, name: "Charizard ex", type: "Fire" },
-            { id: 7, name: "Squirtle", type: "Water" },
-            { id: 8, name: "Wartortle", type: "Water" },
-            { id: 9, name: "Blastoise ex", type: "Water" },
-            { id: 151, name: "Mew ex", type: "Psychic" },
-            { id: 152, name: "Dome Fossil", type: "Trainer" },
-            { id: 165, name: "Safety Goggles", type: "Trainer" }
-        ];
-
-        let currentIndex = 0;
-        let collection = JSON.parse(localStorage.getItem('sargezard_data')) || {};
-
-        function render() {
-            const card = cards[currentIndex];
-            document.getElementById('card-number').innerText = `#${card.id}`;
-            document.getElementById('card-type').innerText = card.type;
-            document.getElementById('card-name').innerText = card.name;
-            document.getElementById('card-image').src = `https://images.pokemontcg.io/sv3pt5/${card.id}_hires.png`;
-
-            const data = collection[card.id] || { normal: 0, holo: 0, rev: 0 };
-            document.getElementById('qty-normal').value = data.normal;
-            document.getElementById('qty-holo').value = data.holo;
-            document.getElementById('qty-rev').value = data.rev;
-
-            updateProgress();
-        }
-
-        function updateQty(type, val) {
-            const card = cards[currentIndex];
-            if (!collection[card.id]) collection[card.id] = { normal: 0, holo: 0, rev: 0 };
-            collection[card.id][type] = Number(val);
-            localStorage.setItem('sargezard_data', JSON.stringify(collection));
-            updateProgress();
-        }
-
-        function changeCard(dir) {
-            currentIndex = (currentIndex + dir + cards.length) % cards.length;
-            render();
-        }
-
-        function updateProgress() {
-            let owned = 0;
-            cards.forEach(c => {
-                const d = collection[c.id];
-                if (d && (d.normal > 0 || d.holo > 0 || d.rev > 0)) owned++;
-            });
-            const pct = (owned / cards.length) * 100;
-            document.getElementById('progress-bar').style.width = pct + '%';
-            document.getElementById('progress-text').innerText = `${owned} / ${cards.length} Collected`;
-        }
-
-        render();
-    </script>
-</body>
-</html>
+            <!-- Ownership status tag -->
+            <div id
+                
