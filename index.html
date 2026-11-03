@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SARGEZARD - Scarlet & Violet: 151 Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SheetJS library for reading/writing Excel files (.xlsx) -->
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen p-4 flex flex-col items-center">
     <div class="max-w-md w-full bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-2xl mb-10">
@@ -84,13 +82,13 @@
 
         <!-- Export / Import Buttons -->
         <div class="flex gap-2 mt-4 pt-4 border-t border-slate-700">
-            <button onclick="exportExcel()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl shadow-lg text-xs transition-all">
-                📊 Export Excel (.xlsx)
+            <button onclick="exportData()" class="flex-1 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold py-2.5 rounded-xl shadow-lg text-xs transition-all">
+                📤 Export Backup
             </button>
             <button onclick="document.getElementById('import-file').click()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold py-2.5 rounded-xl shadow-lg text-xs transition-all border border-slate-600">
-                📥 Load Excel
+                📥 Load Backup
             </button>
-            <input type="file" id="import-file" onchange="importExcel(event)" accept=".xlsx,.xls,.csv" class="hidden" />
+            <input type="file" id="import-file" onchange="importData(event)" accept=".sargezard,.json" class="hidden" />
         </div>
     </div>
 
@@ -170,4 +168,5 @@
             { id: 72, name: "Tentacool", type: "Water", illustrator: "Kyoko Umemoto", hp: "60", stage: "Basic", retreat: "1", attackName: "Poison Sting", attackDmg: "10" },
             { id: 73, name: "Tentacruel", type: "Water", illustrator: "Masakazu Fukuda", hp: "120", stage: "Stage 1", retreat: "2", attackName: "Tentacle Spike", attackDmg: "90" },
             { id: 74, name: "Geodude", type: "Fighting", illustrator: "Akira Komayama", hp: "70", stage: "Basic", retreat: "1", attackName: "Rock Throw", attackDmg: "20" },
-            { id: 75, name: "Graveler", type: "Fightin
+            { id: 75, name: "Graveler", type: "Fighting", illustrator: "Kagemaru Himeno", hp: "100", stage: "Stage 1", retreat: "3", attackName: "Heavy Roll", attackDmg: "60" },
+            { id: 76, name: "Golem ex", t
